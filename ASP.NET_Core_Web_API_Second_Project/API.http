@@ -1,0 +1,6 @@
+@ASP.NET_Core_Web_API_Second_Project_HostAddress = http://localhost:5199
+
+GET {{ASP.NET_Core_Web_API_Second_Project_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

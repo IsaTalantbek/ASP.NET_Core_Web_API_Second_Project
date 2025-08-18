@@ -2,11 +2,13 @@
 
 public class Account
 {
+    public Guid Id { get; init; }
     public Guid UserId { get; init; }
     public int Balance { get; private set; } = 0;
 
-    public Account(Guid userId)
+    public Account(Guid id, Guid userId)
     {
+        Id = id;
         UserId = userId;
     }
 

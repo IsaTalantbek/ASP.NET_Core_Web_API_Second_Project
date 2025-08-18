@@ -5,11 +5,11 @@ VisualStudioVersion = 17.14.36408.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "src\API\API.csproj", "{F46DAF0D-9629-46B9-B4DB-08136124D528}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{1F30D263-B65A-469F-A722-3F8ACA4EF6D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{1F30D263-B65A-469F-A722-3F8ACA4EF6D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{664CB54B-3F8F-4214-B8C4-94B556AC169A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{664CB54B-3F8F-4214-B8C4-94B556AC169A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{427A3E37-0D80-4463-BDD8-CB7065BA566C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{427A3E37-0D80-4463-BDD8-CB7065BA566C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,3 +1,11 @@
+using Application.System;
+using Application.User.Commands;
+using Application.User.Repositories;
+using Domain.Users.Services;
+using Infrastructure.Database;
+using Infrastructure.Database.Repositories;
+using MediatR;
+
 namespace API;
 
 public class Program
@@ -6,10 +14,20 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        // Зависимости домена
+        builder.Services.AddSingleton<CreateUserService>();
+        builder.Services.AddSingleton<AccountTransferService>();
+
+        // Зависимости приложения
+        builder.Services.AddMediatR(typeof(CreateUserCommandHandler).Assembly);
+        builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+        builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 

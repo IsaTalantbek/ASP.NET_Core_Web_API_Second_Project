@@ -16,6 +16,8 @@ public class User
     public string Name { get; private set; }
     public Address? Address { get; private set; }
 
+    private User() {}
+
     // Контролирует свои инвариаты
     public User(Guid id, Guid accountId, string name)
     {

@@ -6,6 +6,8 @@ public class Account
     public Guid UserId { get; init; }
     public long Balance { get; private set; } = 0;
 
+    private Account() {}
+
     public Account(Guid id, Guid userId)
     {
         Id = id;

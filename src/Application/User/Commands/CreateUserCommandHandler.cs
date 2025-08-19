@@ -23,13 +23,13 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand>
         _userRepository = userRepository;
     }
 
-    public async Task Handle(CreateUserCommand command, CancellationToken cancellationToken)
+    public async Task Handle(CreateUserCommand command, CancellationToken ct)
     {
         var (user, account) = _createUserService.Create(command.UserId, command.AccountId, command.Name);
 
         await _userRepository.Create(user);
         await _accountRepository.Create(account);
 
-        await _uow.SaveChangesAsync();
+        await _uow.SaveChangesAsync(ct);
     }
 }

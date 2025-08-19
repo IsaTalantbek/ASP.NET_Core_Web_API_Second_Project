@@ -4,7 +4,7 @@ public class Account
 {
     public Guid Id { get; init; }
     public Guid UserId { get; init; }
-    public int Balance { get; private set; } = 0;
+    public long Balance { get; private set; } = 0;
 
     public Account(Guid id, Guid userId)
     {
@@ -12,7 +12,7 @@ public class Account
         UserId = userId;
     }
 
-    public void Debit(int amount)
+    public void Debit(long amount)
     {
         if (amount < 0)
             throw new ArgumentException($"Нельзя чтобы аргумент был отрицательным: {amount}");
@@ -25,7 +25,7 @@ public class Account
         Balance = newBalance;
     }
 
-    public void Deposit(int amount)
+    public void Deposit(long amount)
     {
         if (amount < 0)
             throw new ArgumentException($"Нельзя чтобы значение было минусовым: {amount}");

@@ -1,4 +1,12 @@
-﻿namespace Domain.Users.Aggregates.Account;
+﻿/*
+    Domain/ - слой
+    Users/ - Bounded Context
+    Aggregates/ - Aggregates
+    Account/ - Aggregate
+    Account.cs - Root Aggregate (Через него идет взаимодействие с связанными объектами и свойствами в агрегате Account. Их пока что нет)
+*/
+
+namespace Domain.Users.Aggregates.Account;
 
 public class Account
 {
@@ -6,6 +14,7 @@ public class Account
     public Guid UserId { get; init; }
     public long Balance { get; private set; } = 0;
 
+    // Нужно для создания через ОРМ (игнорировать)
     private Account() {}
 
     public Account(Guid id, Guid userId)
@@ -14,6 +23,7 @@ public class Account
         UserId = userId;
     }
 
+    // Контролирует свои инварианты
     public void Debit(long amount)
     {
         if (amount < 0)
@@ -27,10 +37,11 @@ public class Account
         Balance = newBalance;
     }
 
+    // Контролирует свои инварианты
     public void Deposit(long amount)
     {
         if (amount < 0)
-            throw new ArgumentException($"Нельзя чтобы значение было минусовым: {amount}");
+            throw new ArgumentException($"Нельзя чтобы аргумент был отрицательным: {amount}");
 
         Balance += amount;
     }

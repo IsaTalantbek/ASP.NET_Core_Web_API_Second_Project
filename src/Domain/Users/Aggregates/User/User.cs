@@ -3,7 +3,7 @@
     Users/ - Bounded Context
     Aggregates/ - Aggregates
     User/ - Aggregate
-    User.cs - Root Aggregate (Через него идет взаимодействие с связанными объектамив агрегате User. Их пока что нет)
+    User.cs - Root Aggregate (Через него идет взаимодействие с связанными объектами и свойствами в агрегате User. Их пока что нет)
 */
 using Domain.Users.ValueObjects; 
 
@@ -16,6 +16,7 @@ public class User
     public string Name { get; private set; }
     public Address? Address { get; private set; }
 
+    // Нужно для создания через ОРМ (игнорировать)
     private User() {}
 
     // Контролирует свои инвариаты

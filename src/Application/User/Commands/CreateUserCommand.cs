@@ -2,7 +2,7 @@
 
 namespace Application.User.Commands;
 
-public class CreateUserCommand : IRequest
+public class CreateUserCommand : IRequest<Guid>
 { 
     public Guid UserId { get; init; }
     public Guid AccountId { get; init; }

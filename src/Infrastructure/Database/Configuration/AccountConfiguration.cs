@@ -12,6 +12,9 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder.HasKey(a => a.Id);
         builder.Property(a => a.Balance).IsRequired();
 
-        builder.HasOne<User>().WithOne().HasForeignKey<Account>(a => a.UserId);
+        //builder.HasOne<User>()
+        //    .WithOne()
+        //    .HasForeignKey<Account>(a => a.UserId)
+        //    .OnDelete(DeleteBehavior.Restrict); // отключаем cascade;
     }
 }

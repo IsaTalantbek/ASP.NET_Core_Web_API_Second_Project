@@ -5,6 +5,8 @@ using Domain.Users.Services;
 using Infrastructure.Database;
 using Infrastructure.Database.Repositories;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace API;
 
@@ -14,12 +16,15 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddDbContext<ProjectDbContext>(options => 
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
         // Зависимости домена
         builder.Services.AddSingleton<CreateUserService>();
         builder.Services.AddSingleton<AccountTransferService>();
 
         // Зависимости приложения
-        builder.Services.AddMediatR(typeof(CreateUserCommandHandler).Assembly);
+        builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(CreateUserCommandHandler).Assembly));
         builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();

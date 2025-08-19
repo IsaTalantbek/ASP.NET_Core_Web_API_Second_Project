@@ -16,6 +16,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             => address.Property(a => a.City).IsRequired()
             );
 
-        builder.HasOne<Account>().WithOne().HasForeignKey<User>(u => u.AccountId);
+        builder.HasOne<Account>()
+            .WithOne()
+            .HasForeignKey<User>(u => u.AccountId)
+            .OnDelete(DeleteBehavior.Restrict); // отключаем cascade;
     }
 }

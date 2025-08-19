@@ -1,6 +1,7 @@
 ﻿using Domain.Users.Aggregates.Account;
 using Domain.Users.Aggregates.User;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace Infrastructure.Database;
 
@@ -17,3 +18,4 @@ public class ProjectDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProjectDbContext).Assembly);
     }
 }
+

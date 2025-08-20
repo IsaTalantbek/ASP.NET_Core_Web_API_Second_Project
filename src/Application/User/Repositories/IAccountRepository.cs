@@ -1,9 +1,10 @@
-﻿using DomainAccount = Domain.Users.Aggregates.Account.Account;
+﻿using Domain.Users.Aggregates;
 
 namespace Application.User.Repositories;
 
 public interface IAccountRepository
 {
-    Task<DomainAccount?> GetByIdAsync(Guid id);
-    Task Create(DomainAccount user);
+    Task<List<Account>> GetAllAsync(CancellationToken ct = default);
+    Task<Account?> GetByIdAsync(Guid id, CancellationToken ct = default);
+    Task Create(Account account, CancellationToken ct = default);
 }

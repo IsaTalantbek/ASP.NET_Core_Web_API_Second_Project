@@ -1,5 +1,5 @@
 ﻿using Application.User.Repositories;
-using Domain.Users.Aggregates.Account;
+using Domain.Users.Aggregates;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database.Repositories;
@@ -13,13 +13,18 @@ public class AccountRepository : IAccountRepository
         _context = context;
     }
 
-    public async Task<Account?> GetByIdAsync(Guid accountId)
+    public async Task<List<Account>> GetAllAsync(CancellationToken ct)
     {
-        return await _context.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
+        return await _context.Accounts.ToListAsync(ct);
     }
 
-    public async Task Create(Account account)
+    public async Task<Account?> GetByIdAsync(Guid accountId, CancellationToken ct)
     {
-        await _context.Accounts.AddAsync(account);
+        return await _context.Accounts.FirstOrDefaultAsync(a => a.Id == accountId, ct);
+    }
+
+    public async Task Create(Account account, CancellationToken ct)
+    {
+        await _context.Accounts.AddAsync(account, ct);
     }
 }

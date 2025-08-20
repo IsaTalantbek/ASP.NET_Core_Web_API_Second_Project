@@ -1,5 +1,4 @@
-﻿using Domain.Users.Aggregates.Account;
-using Domain.Users.Aggregates.User;
+﻿using Domain.Users.Aggregates;
 using Domain.Users.ValueObjects;
 
 namespace Domain.Users.Services;

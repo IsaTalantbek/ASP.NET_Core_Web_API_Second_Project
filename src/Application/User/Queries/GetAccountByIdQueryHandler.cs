@@ -18,7 +18,7 @@ public class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByIdQuery, A
 
     public async Task<AccountDTO?> Handle(GetAccountByIdQuery query, CancellationToken ct)
     {
-        var account = await _accountRepository.GetByIdAsync(query.AccountId);
+        var account = await _accountRepository.GetByIdAsync(query.AccountId, ct);
 
         if (account == null)
             return null;

@@ -18,6 +18,12 @@ public class UsersController : ControllerBase
         _mediator = mediator;
     }
 
+    [HttpGet]
+    public async Task<ActionResult<List<UserDTO>>> GetAll()
+    {
+        return Ok(await _mediator.Send(new GetAllUsersQuery()));
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<UserDTO>> GetByIdAsync(Guid id)
     {

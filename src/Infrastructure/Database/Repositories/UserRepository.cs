@@ -1,7 +1,5 @@
 ﻿using Application.User.Repositories;
-using Domain.Users.Aggregates.Account;
-using Domain.Users.Aggregates.User;
-using Infrastructure.Database;
+using Domain.Users.Aggregates;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database.Repositories;
@@ -14,13 +12,18 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<User?> GetByIdAsync(Guid userId)
+    public async Task<List<User>> GetAllAsync(CancellationToken ct)
     {
-        return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        return await _context.Users.ToListAsync(ct);
     }
 
-    public async Task Create(User user)
+    public async Task<User?> GetByIdAsync(Guid userId, CancellationToken ct)
     {
-        await _context.Users.AddAsync(user);
+        return await _context.Users.FirstOrDefaultAsync(a => a.Id == userId, ct);
+    }
+
+    public async Task Create(User user, CancellationToken ct)
+    {
+        await _context.Users.AddAsync(user, ct);
     }
 }

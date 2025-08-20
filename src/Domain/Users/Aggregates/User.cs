@@ -5,9 +5,9 @@
     User/ - Aggregate
     User.cs - Root Aggregate (Через него идет взаимодействие с связанными объектами и свойствами в агрегате User. Их пока что нет)
 */
-using Domain.Users.ValueObjects; 
+using Domain.Users.ValueObjects;
 
-namespace Domain.Users.Aggregates.User;
+namespace Domain.Users.Aggregates;
 
 public class User
 {

@@ -1,4 +1,4 @@
-﻿using Domain.Users.Aggregates.Account;
+﻿using Domain.Users.Aggregates;
 
 namespace Domain.Users.Services;
 

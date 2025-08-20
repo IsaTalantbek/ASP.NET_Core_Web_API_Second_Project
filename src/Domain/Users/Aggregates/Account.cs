@@ -6,7 +6,7 @@
     Account.cs - Root Aggregate (Через него идет взаимодействие с связанными объектами и свойствами в агрегате Account. Их пока что нет)
 */
 
-namespace Domain.Users.Aggregates.Account;
+namespace Domain.Users.Aggregates;
 
 public class Account
 {

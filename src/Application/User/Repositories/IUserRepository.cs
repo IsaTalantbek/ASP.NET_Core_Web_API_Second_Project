@@ -1,9 +1,10 @@
-﻿using DomainUser = Domain.Users.Aggregates.User.User;
+﻿using DomainUser = Domain.Users.Aggregates.User;
 
 namespace Application.User.Repositories;
 
 public interface IUserRepository
 {
-    Task<DomainUser?> GetByIdAsync(Guid id);
-    Task Create(DomainUser user);
+    Task<List<DomainUser>> GetAllAsync(CancellationToken ct = default);
+    Task<DomainUser?> GetByIdAsync(Guid userId, CancellationToken ct = default);
+    Task Create(DomainUser user, CancellationToken ct = default);
 }

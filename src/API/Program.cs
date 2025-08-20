@@ -1,3 +1,4 @@
+using Application.AutoMapper;
 using Application.System;
 using Application.User.Commands;
 using Application.User.Repositories;
@@ -24,6 +25,7 @@ public class Program
         builder.Services.AddSingleton<AccountTransferService>();
 
         // Зависимости приложения
+        builder.Services.AddAutoMapper(c => c.AddProfile(typeof(MappingProfile)));
         builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(CreateUserCommandHandler).Assembly));
         builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();

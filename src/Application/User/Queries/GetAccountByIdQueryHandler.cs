@@ -1,15 +1,18 @@
 ﻿using Application.User.DTOs;
 using Application.User.Repositories;
+using AutoMapper;
 using MediatR;
 
 namespace Application.User.Queries;
 
 public class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByIdQuery, AccountDTO?>
 {
+    private readonly IMapper _mapper;
     private readonly IAccountRepository _accountRepository;
 
-    public GetAccountByIdQueryHandler(IAccountRepository accountRepository)
+    public GetAccountByIdQueryHandler(IMapper mapper, IAccountRepository accountRepository)
     {
+        _mapper = mapper;
         _accountRepository = accountRepository;
     }
 
@@ -20,7 +23,7 @@ public class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByIdQuery, A
         if (account == null)
             return null;
 
-        return new AccountDTO(account.Id, account.UserId, account.Balance);
+        return _mapper.Map<AccountDTO>(account);
     }
 }
 

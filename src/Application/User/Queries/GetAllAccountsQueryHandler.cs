@@ -1,0 +1,24 @@
+﻿using Applcation.User.Queries;
+using Application.User.DTOs;
+using Application.User.Repositories;
+using AutoMapper;
+using MediatR;
+
+namespace Application.User.Queries;
+
+public class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccountsQuery, List<AccountDTO>>
+{
+    private readonly IMapper _mapper;
+    private readonly IAccountRepository _accountRepository;
+
+    public GetAllAccountsQueryHandler(IMapper mapper, IAccountRepository accountRepository)
+    {
+        _mapper = mapper;
+        _accountRepository = accountRepository;
+    }
+
+    public async Task<List<AccountDTO>> Handle(GetAllAccountsQuery _, CancellationToken ct)
+    {
+        return _mapper.Map<List<AccountDTO>>(await _accountRepository.GetAllAsync(ct));
+    }
+}

@@ -28,7 +28,7 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<long>("Balance")
+                    b.Property<long>("BalanceAmount")
                         .HasColumnType("bigint");
 
                     b.Property<Guid>("UserId")

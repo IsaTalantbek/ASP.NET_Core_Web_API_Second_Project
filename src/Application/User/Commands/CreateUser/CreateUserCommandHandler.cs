@@ -3,9 +3,9 @@ using Application.User.Repositories;
 using Domain.Users.Services;
 using MediatR;
 
-namespace Application.User.Commands;
+namespace Application.User.Commands.CreateUser;
 
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
+public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CreateUserCommandResult>
 {
     private readonly IUnitOfWork _uow;
     private readonly CreateUserService _createUserService;
@@ -23,15 +23,15 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
         _userRepository = userRepository;
     }
 
-    public async Task<Guid> Handle(CreateUserCommand command, CancellationToken ct)
+    public async Task<CreateUserCommandResult> Handle(CreateUserCommand command, CancellationToken ct)
     {
         var (user, account) = _createUserService.Create(command.UserId, command.AccountId, command.Name);
 
-        await _userRepository.Create(user);
-        await _accountRepository.Create(account);
+        await _userRepository.Create(user, ct);
+        await _accountRepository.Create(account, ct);
 
         await _uow.SaveChangesAsync(ct);
 
-        return command.UserId;
+        return new CreateUserCommandResult.Success(user.Id, account.Id);
     }
 }

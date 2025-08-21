@@ -9,7 +9,7 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
     public void Configure(EntityTypeBuilder<Account> builder)
     {
         builder.HasKey(a => a.Id);
-        builder.Property(a => a.Balance).IsRequired();
+        builder.Property(a => a.BalanceAmount).IsRequired();
 
         //builder.HasOne<User>()
         //    .WithOne()

@@ -1,8 +1,8 @@
 ﻿using MediatR;
 
-namespace Application.User.Commands;
+namespace Application.User.Commands.DepositInAccount;
 
-public class DepositInAccountCommand : IRequest
+public class DepositInAccountCommand : IRequest<DepositInAccountCommandResult>
 {
     public Guid AccountId { get; init; }
     public long Amount { get; init; }

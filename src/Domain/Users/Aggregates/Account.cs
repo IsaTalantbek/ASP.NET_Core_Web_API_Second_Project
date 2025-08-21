@@ -12,7 +12,7 @@ public class Account
 {
     public Guid Id { get; init; }
     public Guid UserId { get; init; }
-    public long Balance { get; private set; } = 0;
+    public long BalanceAmount { get; private set; } = 0;
 
     // Нужно для создания через ОРМ (игнорировать)
     private Account() {}
@@ -29,12 +29,12 @@ public class Account
         if (amount < 0)
             throw new ArgumentException($"Нельзя чтобы аргумент был отрицательным: {amount}");
 
-        var newBalance = Balance - amount;
+        var newBalance = BalanceAmount - amount;
 
         if (newBalance < 0)
             throw new InvalidOperationException($"Баланс стал отрицательным: {newBalance}, Полученное значение: {amount}");
 
-        Balance = newBalance;
+        BalanceAmount = newBalance;
     }
 
     // Контролирует свои инварианты
@@ -43,6 +43,6 @@ public class Account
         if (amount < 0)
             throw new ArgumentException($"Нельзя чтобы аргумент был отрицательным: {amount}");
 
-        Balance += amount;
+        BalanceAmount += amount;
     }
 }

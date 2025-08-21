@@ -1,7 +1,7 @@
 ﻿using Application.User.DTOs;
 using MediatR;
 
-namespace Application.User.Queries;
+namespace Application.User.Queries.GetAccountById;
 
 public class GetAccountByIdQuery : IRequest<AccountDTO?>
 {

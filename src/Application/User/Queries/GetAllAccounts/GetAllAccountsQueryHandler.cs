@@ -1,10 +1,9 @@
-﻿using Applcation.User.Queries;
-using Application.User.DTOs;
+﻿using Application.User.DTOs;
 using Application.User.Repositories;
 using AutoMapper;
 using MediatR;
 
-namespace Application.User.Queries;
+namespace Application.User.Queries.GetAllAccounts;
 
 public class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccountsQuery, List<AccountDTO>>
 {

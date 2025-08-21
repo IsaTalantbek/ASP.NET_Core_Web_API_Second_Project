@@ -1,6 +1,6 @@
 ﻿using Application.User.DTOs;
 using MediatR;
 
-namespace Applcation.User.Queries;
+namespace Application.User.Queries.GetAllAccounts;
 
 public class GetAllAccountsQuery : IRequest<List<AccountDTO>>;

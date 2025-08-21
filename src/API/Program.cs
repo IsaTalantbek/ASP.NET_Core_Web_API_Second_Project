@@ -1,6 +1,6 @@
 using Application.AutoMapper;
 using Application.System;
-using Application.User.Commands;
+using Application.User.Commands.CreateUser;
 using Application.User.Repositories;
 using Domain.Users.Services;
 using Infrastructure.Database;

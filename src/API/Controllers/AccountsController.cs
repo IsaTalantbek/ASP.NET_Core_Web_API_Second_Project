@@ -1,8 +1,9 @@
 ﻿using API.Controllers.Requests;
-using Applcation.User.Queries;
-using Application.User.Commands;
+using Application.User.Commands.DepositInAccount;
+using Application.User.Commands.UserTransfer;
 using Application.User.DTOs;
-using Application.User.Queries;
+using Application.User.Queries.GetAccountById;
+using Application.User.Queries.GetAllAccounts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,15 +41,19 @@ public class AccountsController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Transfer([FromBody] AccountsTransferRequest request)
     {
-        await _mediator.Send(new UserTransferCommand(request.From, request.To, request.Amount));
+        var result = await _mediator.Send(new AccountTransferCommand(request.From, request.To, request.Amount));
 
-        return Ok();
+        return result switch
+        {
+            AccountTransferCommandResult.Success s => Ok(),
+            AccountTransferCommandResult.NegativeAmount n => BadRequest({});
+        };
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Deposit([FromRoute] Guid id, [FromBody] long amount)
     {
-        await _mediator.Send(new DepositInAccountCommand(id, amount));
+        var result = await _mediator.Send(new DepositInAccountCommand(id, amount));
 
         return Ok();
     }

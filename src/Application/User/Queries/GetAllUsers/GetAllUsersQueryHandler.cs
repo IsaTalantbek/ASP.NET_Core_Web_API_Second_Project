@@ -4,7 +4,7 @@ using Application.User.Repositories;
 using AutoMapper;
 using MediatR;
 
-namespace Application.User.Queries;
+namespace Application.User.Queries.GetAllUsers;
 
 public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, List<UserDTO>>
 {

@@ -3,7 +3,7 @@ using Application.User.Repositories;
 using AutoMapper;
 using MediatR;
 
-namespace Application.User.Queries;
+namespace Application.User.Queries.GetUserById;
 
 public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserDTO?>
 {

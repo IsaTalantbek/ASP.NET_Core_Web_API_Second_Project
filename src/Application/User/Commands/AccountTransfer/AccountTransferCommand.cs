@@ -1,14 +1,14 @@
 ﻿using MediatR;
 
-namespace Application.User.Commands;
+namespace Application.User.Commands.UserTransfer;
 
-public class UserTransferCommand : IRequest
+public class AccountTransferCommand : IRequest<AccountTransferCommandResult>
 {
     public Guid FromAccountId { get; init; }
     public Guid ToAccountId { get; init; }
     public long Amount { get; init; }
 
-    public UserTransferCommand(Guid fromAccountId, Guid toAccountId, long amount)
+    public AccountTransferCommand(Guid fromAccountId, Guid toAccountId, long amount)
     {
         FromAccountId = fromAccountId;
         ToAccountId = toAccountId;

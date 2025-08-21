@@ -1,8 +1,8 @@
 ﻿using MediatR;
 
-namespace Application.User.Commands;
+namespace Application.User.Commands.CreateUser;
 
-public class CreateUserCommand : IRequest<Guid>
+public class CreateUserCommand : IRequest<CreateUserCommandResult>
 { 
     public Guid UserId { get; init; }
     public Guid AccountId { get; init; }

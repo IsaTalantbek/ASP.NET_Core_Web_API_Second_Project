@@ -1,4 +1,4 @@
-﻿using Application.User.Repositories;
+﻿using Application.Users.Repositories;
 using Domain.Users.Aggregates;
 using Microsoft.EntityFrameworkCore;
 

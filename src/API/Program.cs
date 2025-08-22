@@ -1,13 +1,11 @@
-using Application.AutoMapper;
+using Application.Users.AutoMapper;
 using Application.System;
-using Application.User.Commands.CreateUser;
-using Application.User.Repositories;
+using Application.Users.Commands.CreateUser;
+using Application.Users.Repositories;
 using Domain.Users.Services;
 using Infrastructure.Database;
 using Infrastructure.Database.Repositories;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace API;
 
@@ -25,7 +23,7 @@ public class Program
         builder.Services.AddSingleton<AccountTransferService>();
 
         // Зависимости приложения
-        builder.Services.AddAutoMapper(c => c.AddProfile(typeof(MappingProfile)));
+        builder.Services.AddAutoMapper(c => c.AddProfile(typeof(UsersProfile)));
         builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(CreateUserCommandHandler).Assembly));
         builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();

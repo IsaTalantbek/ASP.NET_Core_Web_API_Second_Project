@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Users\Aggregates\Account\" />
-    <Folder Include="Users\Aggregates\User\" />
+    <Compile Remove="Users\Aggregates\Account\**" />
+    <Compile Remove="Users\Aggregates\User\**" />
+    <EmbeddedResource Remove="Users\Aggregates\Account\**" />
+    <EmbeddedResource Remove="Users\Aggregates\User\**" />
+    <None Remove="Users\Aggregates\Account\**" />
+    <None Remove="Users\Aggregates\User\**" />
   </ItemGroup>
 
 </Project>

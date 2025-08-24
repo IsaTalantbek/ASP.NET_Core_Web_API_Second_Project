@@ -9,4 +9,6 @@ public abstract record AccountTransferCommandResult
     public record NegativeAmount(long Amount) : AccountTransferCommandResult;
 
     public record NegativeBalance(AccountDTO NegativeBalanceAccount, long Amount) : AccountTransferCommandResult;
+
+    public record ConcurrencyException() : AccountTransferCommandResult;
 }

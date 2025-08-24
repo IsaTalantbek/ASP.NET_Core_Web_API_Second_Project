@@ -11,6 +11,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(u => u.Id);
         builder.Property(u => u.Name).IsRequired();
 
+        // Теневая RowVersion
+        builder.Property<byte[]?>("RowVersion").IsRowVersion();
+
         builder.OwnsOne(u => u.Address, address 
             => address.Property(a => a.City).IsRequired()
             );

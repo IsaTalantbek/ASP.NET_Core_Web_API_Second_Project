@@ -31,7 +31,10 @@ public class DepositInAccountCommandHandler : IRequestHandler<DepositInAccountCo
 
         account.Deposit(command.Amount);
 
-        await _uow.SaveChangesAsync(ct);
+        var result = await _uow.SaveChangesAsync(ct);
+
+        if (result == UnitOfWorkResult.ConcurrencyException)
+            return new DepositInAccountCommandResult.ConcurrencyException();
 
         return new DepositInAccountCommandResult.Success(_mapper.Map<AccountDTO>(account));
     }

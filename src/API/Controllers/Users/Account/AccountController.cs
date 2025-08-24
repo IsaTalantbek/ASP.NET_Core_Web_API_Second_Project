@@ -63,7 +63,8 @@ public class AccountController : ControllerBase
                    "NegativeBalance",
                    "After transfer, balance will become negative",
                    new { r.NegativeBalanceAccount.BalanceAmount, r.Amount })
-            )
+            ),
+            AccountTransferCommandResult.ConcurrencyException r => await Transfer(request)
         };
     }
 
@@ -86,7 +87,8 @@ public class AccountController : ControllerBase
                 "NegativeAmount",
                 $"Negative amount: {r.Amount}",
                 new {Amount = r.Amount})
-            )
+            ),
+            DepositInAccountCommandResult.ConcurrencyException r => await Deposit(id, request)
         };
     }
 }

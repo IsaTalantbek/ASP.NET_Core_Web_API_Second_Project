@@ -13,16 +13,30 @@ public class UserRepository : IUserRepository
     }
 
     public async Task<List<User>> GetAllAsync(CancellationToken ct)
+        => await GetAllAsync(false, ct);
+
+    public async Task<List<User>> GetAllAsync(bool isReadonly, CancellationToken ct)
     {
-        return await _context.Users.ToListAsync(ct);
+        var query = isReadonly
+            ? _context.Users.AsNoTracking()
+            : _context.Users;
+
+        return await query.ToListAsync();
     }
 
     public async Task<User?> GetByIdAsync(Guid userId, CancellationToken ct)
+        => await GetByIdAsync(userId, false, ct);
+
+    public async Task<User?> GetByIdAsync(Guid userId, bool isReadonly, CancellationToken ct)
     {
-        return await _context.Users.FirstOrDefaultAsync(a => a.Id == userId, ct);
+        var query = isReadonly
+            ? _context.Users.AsNoTracking()
+            : _context.Users;
+
+        return await query.FirstOrDefaultAsync(a => a.Id == userId, ct);
     }
 
-    public async Task Create(User user, CancellationToken ct)
+    public async Task AddAsync(User user, CancellationToken ct)
     {
         await _context.Users.AddAsync(user, ct);
     }

@@ -27,8 +27,8 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
     {
         var (user, account) = _createUserService.Create(command.UserId, command.AccountId, command.Name);
 
-        await _userRepository.Create(user, ct);
-        await _accountRepository.Create(account, ct);
+        await _userRepository.AddAsync(user, ct);
+        await _accountRepository.AddAsync(account, ct);
 
         await _uow.SaveChangesAsync(ct);
 

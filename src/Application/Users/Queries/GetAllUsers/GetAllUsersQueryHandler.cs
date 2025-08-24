@@ -19,6 +19,6 @@ public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, List<Us
 
     public async Task<List<UserDTO>> Handle(GetAllUsersQuery _, CancellationToken ct)
     {
-        return _mapper.Map<List<UserDTO>>(await _userRepository.GetAllAsync(ct));
+        return _mapper.Map<List<UserDTO>>(await _userRepository.GetAllAsync(isReadonly: true, ct));
     }
 }

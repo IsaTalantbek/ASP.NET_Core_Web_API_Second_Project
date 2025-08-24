@@ -14,16 +14,30 @@ public class AccountRepository : IAccountRepository
     }
 
     public async Task<List<Account>> GetAllAsync(CancellationToken ct)
+        => await GetAllAsync(false, ct);
+
+    public async Task<List<Account>> GetAllAsync(bool isReadonly, CancellationToken ct)
     {
-        return await _context.Accounts.ToListAsync(ct);
+        var query = isReadonly
+            ? _context.Accounts.AsNoTracking()
+            : _context.Accounts;
+
+        return await query.ToListAsync(ct);
     }
 
     public async Task<Account?> GetByIdAsync(Guid accountId, CancellationToken ct)
+        => await GetByIdAsync(accountId, false, ct);
+
+    public async Task<Account?> GetByIdAsync(Guid accountId, bool isReadonly, CancellationToken ct)
     {
-        return await _context.Accounts.FirstOrDefaultAsync(a => a.Id == accountId, ct);
+        var query = isReadonly 
+            ? _context.Accounts.AsNoTracking() 
+            : _context.Accounts;
+
+        return await query.FirstOrDefaultAsync(a => a.Id == accountId);
     }
 
-    public async Task Create(Account account, CancellationToken ct)
+    public async Task AddAsync(Account account, CancellationToken ct)
     {
         await _context.Accounts.AddAsync(account, ct);
     }

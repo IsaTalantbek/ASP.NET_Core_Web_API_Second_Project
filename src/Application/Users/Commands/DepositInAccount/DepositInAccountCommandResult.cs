@@ -9,4 +9,6 @@ public abstract record DepositInAccountCommandResult
     public record NotFound(Guid AccountId) : DepositInAccountCommandResult;
 
     public record NegativeAmount(long Amount) : DepositInAccountCommandResult;
+
+    public record ConcurrencyException() : DepositInAccountCommandResult;
 } 

@@ -11,6 +11,9 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder.HasKey(a => a.Id);
         builder.Property(a => a.BalanceAmount).IsRequired();
 
+        // Теневая RowVersion
+        builder.Property<byte[]?>("RowVersion").IsRowVersion();
+
         //builder.HasOne<User>()
         //    .WithOne()
         //    .HasForeignKey<Account>(a => a.UserId)

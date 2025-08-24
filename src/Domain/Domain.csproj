@@ -1,18 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Users\Aggregates\Account\**" />
-    <Compile Remove="Users\Aggregates\User\**" />
-    <EmbeddedResource Remove="Users\Aggregates\Account\**" />
-    <EmbeddedResource Remove="Users\Aggregates\User\**" />
-    <None Remove="Users\Aggregates\Account\**" />
-    <None Remove="Users\Aggregates\User\**" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
+	</PropertyGroup>
 
 </Project>

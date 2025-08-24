@@ -1,4 +1,5 @@
-﻿using Application.System;
+﻿using System.Data;
+using Application.System;
 
 namespace Infrastructure.Database;
 
@@ -13,7 +14,13 @@ public class EfUnitOfWork : IUnitOfWork
 
     public async Task SaveChangesAsync(CancellationToken ct = default)
     {
-        await _context.SaveChangesAsync(ct);
-        return;
+        try
+        {
+            await _context.SaveChangesAsync(ct);
+        }
+        catch (DBConcurrencyException ex)
+        {
+            
+        }
     }
 }

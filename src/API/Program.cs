@@ -1,10 +1,6 @@
-using Application.Users.AutoMapper;
-using Application.System;
-using Application.Users.Commands.CreateUser;
-using Application.Users.Repositories;
-using Domain.Users.Services;
+using Application.Extensions;
 using Infrastructure.Database;
-using Infrastructure.Database.Repositories;
+using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace API;
@@ -18,17 +14,8 @@ public class Program
         builder.Services.AddDbContext<ProjectDbContext>(options => 
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-        // Зависимости домена
-        builder.Services.AddSingleton<CreateUserService>();
-        builder.Services.AddSingleton<AccountTransferService>();
-
-        // Зависимости приложения
-        builder.Services.AddAutoMapper(c => c.AddProfile(typeof(UsersProfile)));
-        builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(CreateUserCommandHandler).Assembly));
-        builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
-        builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-        builder.Services.AddScoped<IUserRepository, UserRepository>();
-
+        builder.Services.AddApplicationServices();
+        builder.Services.AddInfrastructureServices();
 
         builder.Services.AddControllers();
 

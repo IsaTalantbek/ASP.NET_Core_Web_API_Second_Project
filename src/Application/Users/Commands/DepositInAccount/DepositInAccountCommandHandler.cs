@@ -1,4 +1,5 @@
-﻿using Application.System;
+﻿using Application.Services.Retry;
+using Application.System;
 using Application.Users.DTOs;
 using Application.Users.Repositories;
 using AutoMapper;
@@ -11,31 +12,39 @@ public class DepositInAccountCommandHandler : IRequestHandler<DepositInAccountCo
     private readonly IUnitOfWork _uow;
     private readonly IAccountRepository _accountRepository;
     private readonly IMapper _mapper;
+    private readonly RetryService _retryService;
 
-    public DepositInAccountCommandHandler(IUnitOfWork uow, IAccountRepository accountRepository, IMapper mapper)
+    public DepositInAccountCommandHandler(IUnitOfWork uow, IAccountRepository accountRepository, IMapper mapper, RetryService retryService)
     {
         _uow = uow;
         _accountRepository = accountRepository;
         _mapper = mapper;
-    }
+        _retryService = retryService;
+    }   
 
     public async Task<DepositInAccountCommandResult> Handle(DepositInAccountCommand command, CancellationToken ct)
     {
         if (command.Amount < 0)
             return new DepositInAccountCommandResult.NegativeAmount(command.Amount);
 
-        var account = await _accountRepository.GetByIdAsync(command.AccountId, ct);
+        return await _retryService.ExecuteAsync(async () =>
+        {
 
-        if (account == null)
-            return new DepositInAccountCommandResult.NotFound(command.AccountId);
+            var account = await _accountRepository.GetByIdAsync(command.AccountId, ct);
 
-        account.Deposit(command.Amount);
+            if (account == null)
+                return new DepositInAccountCommandResult.NotFound(command.AccountId);
 
-        var result = await _uow.SaveChangesAsync(ct);
+            account.Deposit(command.Amount);
 
-        if (result == UnitOfWorkResult.ConcurrencyException)
-            return new DepositInAccountCommandResult.ConcurrencyException();
+            var result = await _uow.SaveChangesAsync(ct);
 
-        return new DepositInAccountCommandResult.Success(_mapper.Map<AccountDTO>(account));
+            if (result == UnitOfWorkResult.ConcurrencyException)
+                return new DepositInAccountCommandResult.ConcurrencyException();
+
+            return new DepositInAccountCommandResult.Success(_mapper.Map<AccountDTO>(account));
+        },
+        (DepositInAccountCommandResult r) => r is DepositInAccountCommandResult.ConcurrencyException,
+        ct);
     }
 }

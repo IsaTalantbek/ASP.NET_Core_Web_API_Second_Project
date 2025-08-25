@@ -3,6 +3,5 @@
 public enum UnitOfWorkResult
 {
     Success,
-    ConcurrencyException,
-    Fail,
+    ConcurrencyException
 }

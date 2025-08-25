@@ -1,4 +1,5 @@
-﻿using Application.System;
+﻿using Application.Services.Retry;
+using Application.System;
 using Application.Users.DTOs;
 using Application.Users.Repositories;
 using AutoMapper;
@@ -12,15 +13,18 @@ public class AccountTransferCommandHandler : IRequestHandler<AccountTransferComm
     private readonly IUnitOfWork _uow;
     private readonly IAccountRepository _accountRepository;
     private readonly IMapper _mapper;
+    private readonly RetryService _retryService;
     private readonly AccountTransferService _accountTransferService;
 
     public AccountTransferCommandHandler(IUnitOfWork uow,
         AccountTransferService accountTransferService,
+        RetryService retryService,
         IMapper mapper,
         IAccountRepository accountRepository)
     {
         _uow = uow;
         _accountTransferService = accountTransferService;
+        _retryService = retryService;
         _mapper = mapper;
         _accountRepository = accountRepository;
     }
@@ -30,29 +34,35 @@ public class AccountTransferCommandHandler : IRequestHandler<AccountTransferComm
         if (command.Amount < 0)
             return new AccountTransferCommandResult.NegativeAmount(command.Amount);
 
-        var from = await _accountRepository.GetByIdAsync(command.FromAccountId);
+        return await _retryService.ExecuteAsync(async () =>
+        {
+            var from = await _accountRepository.GetByIdAsync(command.FromAccountId);
 
-        if (from == null)
-            return new AccountTransferCommandResult.NotFound(command.FromAccountId);
+            if (from == null)
+                return new AccountTransferCommandResult.NotFound(command.FromAccountId);
 
-        var to = await _accountRepository.GetByIdAsync(command.ToAccountId, ct);
+            var to = await _accountRepository.GetByIdAsync(command.ToAccountId, ct);
 
-        if (to == null)
-            return new AccountTransferCommandResult.NotFound(command.ToAccountId);
+            if (to == null)
+                return new AccountTransferCommandResult.NotFound(command.ToAccountId);
 
-        if (from.BalanceAmount - command.Amount < 0)
-            return new AccountTransferCommandResult.NegativeBalance(_mapper.Map<AccountDTO>(to), command.Amount);
+            if (from.BalanceAmount - command.Amount < 0)
+                return new AccountTransferCommandResult.NegativeBalance(_mapper.Map<AccountDTO>(to), command.Amount);
 
-        _accountTransferService.Transfer(from, to, command.Amount);
+            _accountTransferService.Transfer(from, to, command.Amount);
 
-        var result = await _uow.SaveChangesAsync(ct);
+            var result = await _uow.SaveChangesAsync(ct);
 
-        if (result == UnitOfWorkResult.ConcurrencyException)
-            return new AccountTransferCommandResult.ConcurrencyException();
+            if (result == UnitOfWorkResult.ConcurrencyException)
+                return new AccountTransferCommandResult.ConcurrencyException();
 
-        return new AccountTransferCommandResult.Success(
-            _mapper.Map<AccountDTO>(to),
-            _mapper.Map<AccountDTO>(from),
-            command.Amount);
+            return new AccountTransferCommandResult.Success(
+                _mapper.Map<AccountDTO>(to),
+                _mapper.Map<AccountDTO>(from),
+                command.Amount);
+        }, 
+        (AccountTransferCommandResult r) => r is AccountTransferCommandResult.ConcurrencyException,
+        ct);
+            
     }
 }

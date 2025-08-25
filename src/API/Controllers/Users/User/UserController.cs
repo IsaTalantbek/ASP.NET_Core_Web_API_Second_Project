@@ -14,21 +14,25 @@ namespace API.Controllers.Users.User;
 public class UserController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<UserController> _logger;
 
-    public UserController(IMediator mediator)
+    public UserController(IMediator mediator, ILogger<UserController> logger)
     {
         _mediator = mediator;
+        _logger = logger;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<UserDTO>>> GetAll()
     {
+        _logger.LogDebug("GetAll");
         return Ok(await _mediator.Send(new GetAllUsersQuery()));
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<UserDTO>> GetByIdAsync(Guid id)
     {
+        _logger.LogInformation("Get: Id = {id}", id);
         var user = await _mediator.Send(new GetUserByIdQuery(id));
 
         if (user == null)
@@ -40,10 +44,14 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<UserCreateResponse>> Create([FromBody] UserCreateRequest request)
     {
+        _logger.LogInformation("Create: Name = {Name}", request.Name);
+
         var result = await _mediator.Send(new CreateUserCommand(
             Guid.NewGuid(),
             Guid.NewGuid(),
             request.Name));
+
+        _logger.LogInformation("Handler result: Type = {FullName}", result.GetType().FullName);
 
         return result switch
         {

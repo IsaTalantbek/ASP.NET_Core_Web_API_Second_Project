@@ -21,10 +21,13 @@ public class EfUnitOfWork : IUnitOfWork
         try
         {
             await _context.SaveChangesAsync(ct);
+            _logger.LogInformation("Succesful save changes");
             return UnitOfWorkResult.Success;
         }
-        catch (DbUpdateConcurrencyException ex)
+        catch (DbUpdateConcurrencyException)
         {
+            _logger.LogInformation("Update concurrency exception");
+
             foreach (var entry in _context.ChangeTracker.Entries().ToList())
                 entry.State = EntityState.Detached;
 

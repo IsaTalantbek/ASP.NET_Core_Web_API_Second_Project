@@ -25,9 +25,6 @@ public class Tests
             builder.SetMinimumLevel(LogLevel.Information);
         });
 
-        services.AddDbContext<ProjectDbContext>(options =>
-            options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=hello;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
-
         //var connection = new SqliteConnection("DataSource=:memory:");
 
         //connection.Open();
@@ -41,7 +38,7 @@ public class Tests
         // });
 
         services.AddApplicationServices();
-        services.AddInfrastructureServices();
+        services.AddInfrastructureServices("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=hello;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
         services.AddScoped<CreateUserCommandHandler>();
         services.AddScoped<AccountTransferCommandHandler>();

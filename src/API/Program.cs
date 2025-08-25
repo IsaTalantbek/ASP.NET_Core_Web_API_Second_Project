@@ -11,11 +11,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddDbContext<ProjectDbContext>(options => 
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
         builder.Services.AddApplicationServices();
-        builder.Services.AddInfrastructureServices();
+        builder.Services.AddInfrastructureServices(builder.Configuration);
 
         builder.Services.AddControllers();
 

@@ -1,7 +1,7 @@
 using Application.Extensions;
-using Infrastructure.Database;
 using Infrastructure.Extensions;
-using Microsoft.EntityFrameworkCore;
+using API.Middlewares.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace API;
 
@@ -11,13 +11,20 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddApplicationServices();
+        builder.Services.AddApplicationServices(builder.Configuration);
         builder.Services.AddInfrastructureServices(builder.Configuration);
+
+        builder.Services.AddLogging(builder =>
+        {
+            builder.AddSimpleConsole(options => options.IncludeScopes = true);
+        });
 
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.AddLoggingMiddleware();
 
         var app = builder.Build();
 
@@ -33,6 +40,8 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+
+        app.UseLoggingMiddleware();
 
         app.Run();
     }

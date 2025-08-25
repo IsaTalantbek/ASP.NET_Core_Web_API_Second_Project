@@ -15,15 +15,18 @@ namespace API.Controllers.Users.Account;
 public class AccountController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<AccountController> _logger;
 
-    public AccountController(IMediator mediator)
+    public AccountController(IMediator mediator, ILogger<AccountController> logger)
     {
         _mediator = mediator;
+        _logger = logger;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<AccountDTO>>> GetAll()
     {
+        _logger.LogDebug("GetAll");
         return Ok(await _mediator.Send(new GetAllAccountsQuery()));
     }
 
@@ -31,23 +34,34 @@ public class AccountController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<AccountDTO>> GetByIdAsync(Guid id)
     {
+        _logger.LogDebug("Get: Id = {id}", id);
+
         var account = await _mediator.Send(new GetAccountByIdQuery(id));
 
         if (account == null)
+        {
+            _logger.LogInformation("NotFound");
             return NotFound();
+        }
 
+        _logger.LogInformation("Succesful found");
         return Ok(account);
     }
 
     [HttpPut]
     public async Task<ActionResult<AccountTransferResponse>> Transfer([FromBody] AccountTransferRequest request)
     {
+        _logger.LogInformation("Transfer: From = {From}, To = {To}, Amount = {Amount}", request.From, request.To, request.Amount);
+
         var result = await _mediator.Send(new AccountTransferCommand(request.From, request.To, request.Amount));
+
+        _logger.LogInformation("Handler result: Type = {FullName}", result.GetType().FullName);
 
         return result switch
         {
             AccountTransferCommandResult.Success r => Ok(new AccountTransferResponse(
-                r.To.BalanceAmount)
+                r.From.BalanceAmount,
+                r.Amount)
             ),
             AccountTransferCommandResult.NegativeAmount r => BadRequest(new ErrorResponse(
                 "NegativeAmount",
@@ -64,14 +78,21 @@ public class AccountController : ControllerBase
                    "After transfer, balance will become negative",
                    new { r.NegativeBalanceAccount.BalanceAmount, r.Amount })
             ),
-            AccountTransferCommandResult.ConcurrencyException r => await Transfer(request)
+            AccountTransferCommandResult.ConcurrencyException => Conflict(new ErrorResponse(
+                "ConcurrencyException",
+                "Too much concurrency",
+                new {}))
         };
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult<AccountDepositResponse>> Deposit([FromRoute] Guid id, [FromBody] AccountDepositRequest request)
     {
+        _logger.LogInformation($"Deposit: id: {id}, amount: {request.Amount}");
+
         var result = await _mediator.Send(new DepositInAccountCommand(id, request.Amount));
+
+        _logger.LogInformation($"Handler result: {result.GetType().FullName}");
 
         return result switch
         {
@@ -88,7 +109,10 @@ public class AccountController : ControllerBase
                 $"Negative amount: {r.Amount}",
                 new {Amount = r.Amount})
             ),
-            DepositInAccountCommandResult.ConcurrencyException r => await Deposit(id, request)
+            DepositInAccountCommandResult.ConcurrencyException => Conflict(new ErrorResponse(
+                "ConcurrencyException",
+                "Too much concurrency",
+                new { }))
         };
     }
 }

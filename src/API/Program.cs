@@ -16,7 +16,8 @@ public class Program
 
         builder.Services.AddLogging(builder =>
         {
-            builder.AddSimpleConsole(options => options.IncludeScopes = true);
+            builder.AddDebug();
+            builder.AddConsole();
         });
 
         builder.Services.AddControllers();

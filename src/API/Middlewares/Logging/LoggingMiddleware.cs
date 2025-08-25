@@ -10,7 +10,7 @@ public class LoggingMiddleware : IMiddleware
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         var requestId = Guid.NewGuid();
-        using (_logger.BeginScope($"[{requestId}]"))
+        using (_logger.BeginScope("{requestId}", requestId))
         {
             _logger.LogInformation("Request path: {Path}", context.Request.Path);
             await next(context);

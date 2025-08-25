@@ -40,8 +40,8 @@ public class AccountTransferCommandHandler : IRequestHandler<AccountTransferComm
         if (to == null)
             return new AccountTransferCommandResult.NotFound(command.ToAccountId);
 
-        if (to.BalanceAmount - command.Amount < 0)
-            return new AccountTransferCommandResult.NegativeBalance(_mapper.Map<AccountDTO>(to), (command.Amount));
+        if (from.BalanceAmount - command.Amount < 0)
+            return new AccountTransferCommandResult.NegativeBalance(_mapper.Map<AccountDTO>(to), command.Amount);
 
         _accountTransferService.Transfer(from, to, command.Amount);
 

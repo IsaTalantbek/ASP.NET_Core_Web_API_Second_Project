@@ -43,8 +43,6 @@ public class AccountTransferCommandHandler : IRequestHandler<AccountTransferComm
         if (to.BalanceAmount - command.Amount < 0)
             return new AccountTransferCommandResult.NegativeBalance(_mapper.Map<AccountDTO>(to), (command.Amount));
 
-        await Task.Delay(50); // чтобы другой контекст успел обновить
-
         _accountTransferService.Transfer(from, to, command.Amount);
 
         var result = await _uow.SaveChangesAsync(ct);

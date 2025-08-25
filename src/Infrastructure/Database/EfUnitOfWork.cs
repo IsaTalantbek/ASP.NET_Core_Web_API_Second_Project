@@ -25,8 +25,6 @@ public class EfUnitOfWork : IUnitOfWork
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            _logger.LogInformation("DbUpdateConcurrencyException", ex);
-
             foreach (var entry in _context.ChangeTracker.Entries().ToList())
                 entry.State = EntityState.Detached;
 

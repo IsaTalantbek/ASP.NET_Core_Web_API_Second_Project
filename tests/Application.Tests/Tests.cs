@@ -92,9 +92,9 @@ public class Tests
         logger.LogInformation(message);
 
         if (result is AccountTransferCommandResult.ConcurrencyException)
-            scope.ServiceProvider.GetRequiredService<ILogger<Tests>>().LogInformation("Concurrency Exception!");
+            logger.LogInformation("Concurrency Exception!");
         else
-            scope.ServiceProvider.GetRequiredService<ILogger<Tests>>().LogInformation(result.ToString());
+            logger.LogInformation(result.ToString());
     }
 
     private async Task<Guid> CreateUser(IServiceProvider provider, long balanceAmount, CancellationToken ct)

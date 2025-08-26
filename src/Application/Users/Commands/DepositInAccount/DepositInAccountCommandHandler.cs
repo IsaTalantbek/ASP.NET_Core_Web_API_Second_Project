@@ -1,5 +1,5 @@
 ﻿using Application.Services.Retry;
-using Application.System;
+using Application.System.UnitOfWork;
 using Application.Users.DTOs;
 using Application.Users.Repositories;
 using AutoMapper;
@@ -27,7 +27,7 @@ public class DepositInAccountCommandHandler : IRequestHandler<DepositInAccountCo
         if (command.Amount < 0)
             return new DepositInAccountCommandResult.NegativeAmount(command.Amount);
 
-        return await _retryService.ExecuteAsync(async () =>
+        return await _retryService.ExecuteAsync<DepositInAccountCommandResult>(async () =>
         {
 
             var account = await _accountRepository.GetByIdAsync(command.AccountId, ct);
@@ -39,10 +39,12 @@ public class DepositInAccountCommandHandler : IRequestHandler<DepositInAccountCo
 
             var result = await _uow.SaveChangesAsync(ct);
 
-            if (result == UnitOfWorkResult.ConcurrencyException)
-                return new DepositInAccountCommandResult.ConcurrencyException();
-
-            return new DepositInAccountCommandResult.Success(_mapper.Map<AccountDTO>(account));
+            return result switch
+            {
+                UnitOfWorkResult.Success => new DepositInAccountCommandResult.Success(_mapper.Map<AccountDTO>(account)),
+                UnitOfWorkResult.ConcurrencyException => new DepositInAccountCommandResult.ConcurrencyException(),
+                _ => throw new InvalidOperationException("Invalid result from unit of work")
+            };
         },
         (DepositInAccountCommandResult r) => r is DepositInAccountCommandResult.ConcurrencyException,
         ct);

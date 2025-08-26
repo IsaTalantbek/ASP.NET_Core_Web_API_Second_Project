@@ -78,10 +78,16 @@ public class AccountController : ControllerBase
                    "After transfer, balance will become negative",
                    new { r.NegativeBalanceAccount.BalanceAmount, r.Amount })
             ),
+            AccountTransferCommandResult.SelfTransaction => BadRequest(new ErrorResponse(
+                "SelfTransaction",
+                "Impossible transfer yo yourself",
+                new { })
+            ),
             AccountTransferCommandResult.ConcurrencyException => Conflict(new ErrorResponse(
                 "ConcurrencyException",
                 "Too much concurrency",
-                new {}))
+                new { })),
+            _ => throw new InvalidOperationException($"Invalid result from handler: {result.GetType().FullName}")
         };
     }
 
@@ -112,7 +118,9 @@ public class AccountController : ControllerBase
             DepositInAccountCommandResult.ConcurrencyException => Conflict(new ErrorResponse(
                 "ConcurrencyException",
                 "Too much concurrency",
-                new { }))
+                new { })
+            ),
+            _ => throw new InvalidOperationException($"Invalid result from handler: {result.GetType().FullName}")
         };
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Application.System;
+﻿namespace Application.System.UnitOfWork;
 
 public enum UnitOfWorkResult
 {

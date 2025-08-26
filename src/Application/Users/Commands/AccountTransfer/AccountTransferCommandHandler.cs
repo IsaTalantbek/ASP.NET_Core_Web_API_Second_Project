@@ -1,5 +1,5 @@
 ﻿using Application.Services.Retry;
-using Application.System;
+using Application.System.UnitOfWork;
 using Application.Users.DTOs;
 using Application.Users.Repositories;
 using AutoMapper;
@@ -31,10 +31,13 @@ public class AccountTransferCommandHandler : IRequestHandler<AccountTransferComm
 
     public async Task<AccountTransferCommandResult> Handle(AccountTransferCommand command, CancellationToken ct)
     {
+        if (command.ToAccountId == command.FromAccountId)
+            return new AccountTransferCommandResult.SelfTransaction(command.Amount);
+
         if (command.Amount < 0)
             return new AccountTransferCommandResult.NegativeAmount(command.Amount);
 
-        return await _retryService.ExecuteAsync(async () =>
+        return await _retryService.ExecuteAsync<AccountTransferCommandResult>(async () =>
         {
             var from = await _accountRepository.GetByIdAsync(command.FromAccountId);
 
@@ -53,16 +56,18 @@ public class AccountTransferCommandHandler : IRequestHandler<AccountTransferComm
 
             var result = await _uow.SaveChangesAsync(ct);
 
-            if (result == UnitOfWorkResult.ConcurrencyException)
-                return new AccountTransferCommandResult.ConcurrencyException();
-
-            return new AccountTransferCommandResult.Success(
-                _mapper.Map<AccountDTO>(to),
-                _mapper.Map<AccountDTO>(from),
-                command.Amount);
-        }, 
+            return result switch
+            {
+                UnitOfWorkResult.ConcurrencyException => new AccountTransferCommandResult.ConcurrencyException(),
+                UnitOfWorkResult.Success => new AccountTransferCommandResult.Success(
+                    _mapper.Map<AccountDTO>(to),
+                    _mapper.Map<AccountDTO>(from),
+                    command.Amount),
+                _ => throw new InvalidOperationException("Invalid result from unit of work")
+            };
+        },
         (AccountTransferCommandResult r) => r is AccountTransferCommandResult.ConcurrencyException,
         ct);
-            
+
     }
 }

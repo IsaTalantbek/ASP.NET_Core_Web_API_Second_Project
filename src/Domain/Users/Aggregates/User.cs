@@ -6,6 +6,7 @@
     User.cs - Root Aggregate (Через него идет взаимодействие с связанными объектами и свойствами в агрегате User. Их пока что нет)
 */
 using Domain.Users.ValueObjects;
+using System.Data;
 
 namespace Domain.Users.Aggregates;
 
@@ -17,7 +18,7 @@ public class User
     public Address? Address { get; private set; }
 
     // Нужно для создания через ОРМ (игнорировать)
-    private User() {}
+    private User() { }
 
     // Контролирует свои инвариаты
     public User(Guid id, Guid accountId, string name)

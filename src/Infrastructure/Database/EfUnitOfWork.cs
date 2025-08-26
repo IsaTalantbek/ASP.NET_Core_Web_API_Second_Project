@@ -1,7 +1,7 @@
-﻿using Application.System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Microsoft.Extensions.Logging;
+using Application.System.UnitOfWork;
 
 namespace Infrastructure.Database;
 
@@ -35,3 +35,4 @@ public class EfUnitOfWork : IUnitOfWork
         }
     }
 }
+

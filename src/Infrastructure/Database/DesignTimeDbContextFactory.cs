@@ -16,7 +16,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ProjectDbC
         var useConnectionString =
             Path.Combine(APIPath, "appsettings.Development.json", "ConnectionStrings.DefaultConnection");
 
-        Console.WriteLine($"Use {useConnectionString} ?");
+        Console.WriteLine($"Use {useConnectionString}?");
         Console.WriteLine("Press any key to continue, or press CTRL+C to cancel...");
         Console.ReadKey();
 

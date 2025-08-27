@@ -25,6 +25,20 @@ public static class ApplicationServicesExtensions
         return services;
     }
 
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services, RetryPolicy retryPolicy)
+    {
+        // Зависимости домена
+        services.AddDomainServices();
+
+        // Зависимости приложения
+        services.AddRetryService(retryPolicy);
+
+        services.AddAutoMapper(c => c.AddProfile(typeof(UsersProfile)));
+        services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(CreateUserCommand).Assembly));
+
+        return services;
+    }
+
     private static IServiceCollection AddDomainServices(this IServiceCollection services)
     {
         services.AddSingleton<CreateUserService>();

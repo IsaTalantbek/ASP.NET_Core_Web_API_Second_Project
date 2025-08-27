@@ -2,6 +2,7 @@ using Application.Extensions;
 using Infrastructure.Extensions;
 using API.Middlewares.Logging;
 using Microsoft.Extensions.Logging.Console;
+using API.Controllers;
 
 namespace API;
 
@@ -29,12 +30,14 @@ public class Program
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        if (!app.Environment.IsDevelopment())
+            app.UseExceptionHandler("/api/error");
 
         app.UseHttpsRedirection();
 
@@ -43,6 +46,7 @@ public class Program
         app.MapControllers();
 
         app.UseLoggingMiddleware();
+
 
         app.Run();
     }

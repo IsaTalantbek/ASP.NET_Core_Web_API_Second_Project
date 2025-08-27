@@ -20,4 +20,16 @@ internal static class RetryServiceExtensions
 
         return services;
     }
+
+    internal static IServiceCollection AddRetryService(this IServiceCollection services, RetryPolicy retryPolicy)
+    { 
+        services.AddSingleton<RetryPolicy>(sp =>
+        {
+            return retryPolicy;
+        });
+
+        services.AddSingleton<RetryService>();
+
+        return services;
+    }
 }

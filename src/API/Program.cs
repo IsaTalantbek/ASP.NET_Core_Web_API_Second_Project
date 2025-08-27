@@ -3,6 +3,8 @@ using Infrastructure.Extensions;
 using API.Middlewares.Logging;
 using Microsoft.Extensions.Logging.Console;
 using API.Controllers;
+using Serilog.Core;
+using Serilog;
 
 namespace API;
 
@@ -12,14 +14,16 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Logging.ClearProviders();
+
+        var logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+            .CreateLogger();
+
+        builder.Host.UseSerilog(logger);
+
         builder.Services.AddApplicationServices(builder.Configuration);
         builder.Services.AddInfrastructureServices(builder.Configuration);
-
-        builder.Services.AddLogging(builder =>
-        {
-            builder.AddDebug();
-            builder.AddConsole();
-        });
 
         builder.Services.AddControllers();
 

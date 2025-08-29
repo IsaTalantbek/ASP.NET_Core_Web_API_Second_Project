@@ -6,6 +6,7 @@ using Application.Users.DTOs;
 using Application.Users.Queries.GetAccountById;
 using Application.Users.Queries.GetAllAccounts;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Users.Account;
